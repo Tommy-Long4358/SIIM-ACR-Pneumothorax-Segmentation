@@ -3,6 +3,17 @@ from torch.utils.data import Dataset
 from PIL import Image
 
 class ChestDataset(Dataset):
+    """Creates the Chest dataset.
+
+    This dataset groups matching image and masks with each other and applies preprocessing, loading,
+    converting, and data augmentation. Each image and mask pair is returned as a Tensor.
+
+    Args:
+    images - A 1D list of image directory paths as PNGs.
+    masks - A 1D list of mask directory paths as PNGs
+    transform_images: Applies data augmentation to images
+    transform_masks: Applies data augmentation to masks
+    """
     def __init__(self, images, masks, transform_images=None, transform_masks=None):
         self.images = images
         self.masks = masks

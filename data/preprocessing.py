@@ -6,6 +6,19 @@ from tqdm import tqdm
 from PIL import Image
 
 def rle2mask(rle, width, height):
+    """Converts RLE (Run-Length Encoded) masks into numpy arrays.
+    Masks are initialized as 1D numpy arrays that are of length width * height.
+    RLEs are a string that consists of numbers. Every odd number in the string represents which pixel to start at and every
+    even number represents how many pixels from the odd number to turn on.
+    
+    Args:
+    rle - A string of numbers.
+    width - The dimension of the image.
+    height - The dimension of the image.
+
+    Returns:
+    A 2D numpy array of the RLE mask.
+    """
     # Create a 1D array of zeros that is of length width * height
     mask = np.zeros(width * height, dtype=np.float32)
 
@@ -34,10 +47,27 @@ def rle2mask(rle, width, height):
     return mask.reshape((height, width)).T
 
 def dcm_to_numpy(image):
+    """Converts a DICOM file into a numpy array with dcmread().
+
+    Args:
+    image - The file path for the DICOM file
+
+    Returns:
+    A 2D numpy array of the image converted.
+    """
     image = dcmread(image)
     return image.pixel_array
 
 def preprocess_data(output_dir, images, rle_pd):
+    """Converts each image and mask into numpy arrays and resizes them to be saved as PNGs.
+
+    It converts images represented as DICOM files into numpy arrays and translates RLE masks.
+    
+    Args:
+    output_dir - The directory to save the images in.
+    images - A 1D list of image paths
+    rle_pd - A pandas .csv file of RLE masks for each image. An image can have multiple RLE masks.
+    """
     os.makedirs(f"{output_dir}/pneumothorax/image", exist_ok=True)
     os.makedirs(f"{output_dir}/pneumothorax/mask", exist_ok=True)
     os.makedirs(f"{output_dir}/normal/image", exist_ok=True)
